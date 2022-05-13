@@ -1,6 +1,13 @@
 package com.example.topmovies.mvp;
 
-public class TopMoviesActivityPresenter implements TopMoviesActivityMVP.presenter {
+public class TopMoviesActivityPresenter implements TopMoviesActivityMVP.Presenter {
+
+    private final TopMoviesActivityMVP.Model model;
+
+    public TopMoviesActivityPresenter(TopMoviesActivityMVP.Model model) {
+        this.model = model;
+    }
+
     @Override
     public void loadData() {
 

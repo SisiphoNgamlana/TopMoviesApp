@@ -1,13 +1,16 @@
 package com.example.topmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import com.example.topmovies.mvp.TopMoviesActivityMVP;
+import com.example.topmovies.mvp.TopMoviesActivityPresenter;
+import com.example.topmovies.mvp.TopMoviesViewModel;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +25,9 @@ public class TopMoviesActivity extends AppCompatActivity implements TopMoviesAct
     @BindView(R.id.container_movies_list)
     LinearLayout moviesListContainer;
 
+    @Inject
+    TopMoviesActivityPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +37,15 @@ public class TopMoviesActivity extends AppCompatActivity implements TopMoviesAct
     }
 
     @Override
-    public void updateData(ViewModel viewModel) {
+    protected void onStart() {
+        super.onStart();
+        presenter.setView(this);
+        presenter.loadData();
+
+    }
+
+    @Override
+    public void updateData(TopMoviesViewModel viewModel) {
 
 
     }

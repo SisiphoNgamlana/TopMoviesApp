@@ -7,16 +7,16 @@ import rx.Observable;
 public interface TopMoviesActivityMVP {
 
     interface View {
-        void updateData(ViewModel viewModel);
+        void updateData(TopMoviesViewModel topMoviesViewModel);
 
         void showSnackBar(String message);
     }
 
     interface Model {
-        Observable<ViewModel> result();
+        Observable<TopMoviesViewModel> result();
     }
 
-    interface presenter {
+    interface Presenter {
         void loadData();
 
         void Unsubscribe();
