@@ -8,12 +8,10 @@ import com.example.topmovies.api.TopRated;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 public class TopMoviesRepository implements Repository {
 
@@ -33,14 +31,14 @@ public class TopMoviesRepository implements Repository {
         this.results = new ArrayList<>();
     }
 
-    public boolean isRepoValid(){
+    public boolean isRepoValid() {
         return System.currentTimeMillis() - timestamp < STALE_MS;
     }
 
     @Override
     public Observable<Result> getResultsFromMemory() {
         if (isRepoValid()) {
-            return Observable.from(results);
+            return Observable.fromIterable(results);
         } else {
             timestamp = System.currentTimeMillis();
             results.clear();
@@ -54,34 +52,26 @@ public class TopMoviesRepository implements Repository {
                 .concatWith(movieAPIService.getTopRatedMovies(2))
                 .concatWith(movieAPIService.getTopRatedMovies(3));
 
-        return topRatedObservable.concatMap(new Func1<TopRated, Observable<Result>>() {
+        return topRatedObservable.concatMap(new Function<TopRated, Observable<Result>>() {
             @Override
-            public Observable<Result> call(TopRated topRated) {
-                return Observable.from(topRated.results);
+            public Observable<Result> apply(TopRated topRated) {
+                return Observable.fromIterable(topRated.results);
             }
 
-//            @Override
-//            public Observable<Result> apply(TopRated topRated) {
-//                return Observable.from(topRated.results);
-//            }
-        }).doOnNext(new Action1<Result>() {
+        }).doOnNext(new Consumer<Result>() {
             @Override
-            public void call(Result result) {
+            public void accept(Result result) {
                 results.add(result);
-
             }
-//            @Override
-//            public void accept(Result result) {
-//                results.add(result);
-//            }
         });
     }
 
     @Override
     public Observable<String> getCountriesFromMemory() {
-        if(isRepoValid()){
-            return Observable.from(countries);
-        } else {timestamp = System.currentTimeMillis();
+        if (isRepoValid()) {
+            return Observable.fromIterable(countries);
+        } else {
+            timestamp = System.currentTimeMillis();
             countries.clear();
             return Observable.empty();
         }
@@ -89,20 +79,21 @@ public class TopMoviesRepository implements Repository {
 
     @Override
     public Observable<String> getCountriesFromNetwork() {
-        return getResultsFromNetwork().concatMap(new Func1<Result, Observable<Movie>>() {
+        return getResultsFromNetwork().concatMap(new Function<Result, Observable<Movie>>() {
             @Override
-            public Observable<Movie> call(Result result) {
+            public Observable<Movie> apply(Result result) throws Exception {
                 return moviesInfoService.getCountry(result.title);
             }
-        }).concatMap(new Func1<Movie, Observable<String>>() {
+        }).concatMap(new Function<Movie, Observable<String>>() {
             @Override
-            public Observable<String> call(Movie movie) {
+            public Observable<String> apply(Movie movie) throws Exception {
                 return Observable.just(movie.getCountry());
             }
-        }).doOnNext(new Action1<String>() {
+        }).doOnNext(new Consumer<String>() {
             @Override
-            public void call(String string) {
+            public void accept(String string) throws Exception {
                 countries.add(string);
+
             }
         });
     }
