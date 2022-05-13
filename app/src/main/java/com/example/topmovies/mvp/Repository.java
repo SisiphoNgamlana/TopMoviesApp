@@ -2,7 +2,7 @@ package com.example.topmovies.mvp;
 
 import com.example.topmovies.api.Result;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface Repository {
 
