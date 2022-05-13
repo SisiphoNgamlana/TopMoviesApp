@@ -2,7 +2,7 @@ package com.example.topmovies.mvp;
 
 import androidx.lifecycle.ViewModel;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface TopMoviesActivityMVP {
 
