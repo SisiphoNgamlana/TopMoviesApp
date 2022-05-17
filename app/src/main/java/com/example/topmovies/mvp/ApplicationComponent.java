@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {MoviesAPIModule.class, MoviesInfoServiceModule.class})
+@Component(modules = {MoviesAPIModule.class, MoviesInfoServiceModule.class, TopMoviesActivityModule.class})
 public interface ApplicationComponent {
 
     void inject(TopMoviesActivity topMoviesActivity);
@@ -24,6 +24,7 @@ public interface ApplicationComponent {
         public void onCreate() {
             super.onCreate();
             applicationComponent = DaggerApplicationComponent.builder()
+                    .topMoviesActivityModule(new TopMoviesActivityModule())
                     .moviesAPIModule(new MoviesAPIModule())
                     .moviesInfoServiceModule(new MoviesInfoServiceModule())
                     .build();
