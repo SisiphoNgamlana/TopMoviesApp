@@ -3,6 +3,8 @@ package com.example.topmovies.mvp;
 import com.example.topmovies.api.MovieAPIService;
 import com.example.topmovies.api.MoviesInfoService;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -20,6 +22,7 @@ public class TopMoviesActivityModule {
 
     }
 
+    @Singleton
     @Provides
     public Repository providesRepository(MovieAPIService movieAPIService, MoviesInfoService moviesInfoService) {
         return new TopMoviesRepository(movieAPIService, moviesInfoService);
